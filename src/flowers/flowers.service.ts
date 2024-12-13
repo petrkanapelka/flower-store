@@ -1,30 +1,19 @@
 import { Injectable } from '@nestjs/common';
-
-// interface Flower {
-//   name: string;
-//   color: string;
-//   price: number;
-// }
+import { Flower } from '@prisma/client';
+import { PrismaService } from 'src/prisma.service';
+import { FlowersCreateDto } from './flowers.dto';
 
 @Injectable()
 export class FlowersService {
-  findAll() {
-    return [
-      {
-        name: 'Rose',
-        color: 'Red',
-        price: 5,
-      },
-      {
-        name: 'Lily',
-        color: 'White',
-        price: 6,
-      },
-      {
-        name: 'Tulip',
-        color: 'Yellow',
-        price: 7,
-      },
-    ];
+  constructor(private readonly prisma: PrismaService) {}
+
+  async findAll(): Promise<Flower[]> {
+    return await this.prisma.flower.findMany();
+  }
+
+  create(dto: FlowersCreateDto) {
+    return this.prisma.flower.create({
+      data: dto,
+    });
   }
 }
